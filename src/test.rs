@@ -53,8 +53,7 @@ mod tests {
 
         // Prover's scope
         let start = Instant::now();
-        let (proof, commitments) = {
-            let mut comms = vec![];
+        let (proof, committed_value) = {
 
             // Prover makes a `ConstraintSystem` instance representing a range proof gadget
             let mut prover_transcript = Transcript::new(b"BoundsTest");
@@ -63,17 +62,16 @@ mod tests {
             let mut prover = Prover::new(&pc_gens, &mut prover_transcript);
 
             // Constrain v in [0, 2^n)
-            let (com_v, var_v) = prover.commit(v.into(), Scalar::random(&mut rng));
+            let (committed_value, var_v) = prover.commit(v.into(), Scalar::random(&mut rng));
             let quantity_v = AllocatedQuantity {
                 variable: var_v,
                 assignment: Some(v),
             };
             assert!(positive_no_gadget(&mut prover, quantity_v, n.into()).is_ok());
-            comms.push(com_v);
 
             let proof = prover.prove(&bp_gens)?;
 
-            (proof, comms)
+            (proof, committed_value)
         };
         println!(
             "\t proving time: {} ms",
@@ -86,7 +84,7 @@ mod tests {
         let mut verifier_transcript = Transcript::new(b"BoundsTest");
         let mut verifier = Verifier::new(&mut verifier_transcript);
 
-        let var_v = verifier.commit(commitments[0]);
+        let var_v = verifier.commit(committed_value);
         let quantity_v = AllocatedQuantity {
             variable: var_v,
             assignment: None,
