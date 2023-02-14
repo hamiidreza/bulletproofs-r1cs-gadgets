@@ -22,7 +22,8 @@ mod tests {
     #[test]
     fn test_r1cs_range_proof() {
         test_range_proof_gadget();
-        test_range_proof_and_gadget();    }
+        test_range_proof_and_gadget();    
+    }
 
     fn test_range_proof_gadget() {
         let n: u8 = 64;
