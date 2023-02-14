@@ -13,11 +13,11 @@ use std::time::Instant;
 use rand::rngs::OsRng;
 use rand::Rng;
 use crate::r1cs_utils::{AllocatedQuantity, positive_no_gadget, constrain_lc_with_scalar};
+use merlin::Transcript;
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use merlin::Transcript;
 
     #[test]
     fn test_r1cs_range_proof() {
